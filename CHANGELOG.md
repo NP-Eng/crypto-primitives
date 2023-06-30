@@ -4,9 +4,11 @@
 
 ### Breaking changes
 
+- [\#114](https://github.com/arkworks-rs/crypto-primitives/pull/114) Enforce `CanonicalSerialize` and `CanonicalDeserialize` trait bounds for `CRHScheme::Parameters` and `TwoToOneCRHScheme::Parameters`.
+
 ### Features
 
-- [\#107](https://github.com/arkworks-rs/crypto-primitives/pull/107) Impl `CanonicalSerialize` and `CanonicalDeserialize` for `ark_crypto_primitives::crh::pedersen::Parameters`
+- [\#107](https://github.com/arkworks-rs/crypto-primitives/pull/107) Impl `CanonicalSerialize` and `CanonicalDeserialize` for `ark_crypto_primitives::crh::pedersen::Parameters`.
 
 ### Improvements
 
