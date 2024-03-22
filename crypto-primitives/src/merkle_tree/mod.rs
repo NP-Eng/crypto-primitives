@@ -550,6 +550,56 @@ impl<P: Config> MerkleTree<P> {
         })
     }
 
+    fn compute_auth_path_with_cache(
+        &self,
+        index: usize,
+        cache: &mut Vec<Vec<usize>>,
+    ) -> Vec<P::InnerDigest> {
+        // gather basic tree information
+        let tree_height = tree_height(self.leaf_nodes.len());
+
+        // Get Leaf hash, and leaf sibling hash,
+        let leaf_index_in_tree = convert_index_to_last_level(index, tree_height);
+
+        // Update the cache with the path from the starting node
+        let path_indices = self.compute_auth_path_cache_helper(leaf_index_in_tree, cache);
+
+        debug_assert_eq!(path_indices.len(), tree_height - 2);
+
+        // Convert the indices to digests
+        path_indices
+            .into_iter()
+            .map(|i| self.non_leaf_nodes[i].clone())
+            .collect()
+    }
+
+    fn compute_auth_path_cache_helper(
+        &self,
+        index: usize,
+        cache: &mut Vec<Vec<usize>>,
+    ) -> Vec<usize> {
+        let elem = &cache[index];
+
+        if !elem.is_empty() {
+            return elem.clone();
+        }
+
+        let parent_node = parent(index).unwrap();
+
+        if is_root(parent_node) {
+            return Vec::new();
+        }
+
+        let sibling_node = sibling(parent_node).unwrap();
+
+        let mut path_indices = self.compute_auth_path_cache_helper(parent_node, cache);
+        path_indices.push(sibling_node);
+
+        cache[index] = path_indices.clone();
+
+        path_indices
+    }
+
     /// Returns a MultiPath (multiple authentication paths in compressed form, with Front Incremental Encoding),
     /// from every leaf to root.
     /// Note that for compression efficiency, the indexes are internally sorted.
@@ -573,11 +623,12 @@ impl<P: Config> MerkleTree<P> {
         let mut leaf_siblings_hashes = Vec::with_capacity(indexes.len());
 
         let mut prev_path = Vec::new();
+        let mut cache = vec![Vec::<usize>::new(); (1 << (self.height + 1)) - 1];
 
         for index in &indexes {
             leaf_siblings_hashes.push(self.get_leaf_sibling_hash(*index));
 
-            let path = self.compute_auth_path(*index);
+            let path = self.compute_auth_path_with_cache(*index, &mut cache);
 
             // incremental encoding
             let (prefix_len, suffix) = prefix_encode_path(&prev_path, &path);
