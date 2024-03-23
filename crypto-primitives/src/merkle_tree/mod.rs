@@ -766,10 +766,10 @@ where
     T: Eq + Clone,
 {
     let mut prefix_len = 0;
-    if prev_path.len() != 0 && path.len() != 0 {
+    if prev_path.len() != 0 {
         while prev_path[prefix_len] == path[prefix_len] {
             prefix_len += 1;
-            if prefix_len == prev_path.len() || prefix_len == path.len() {
+            if prefix_len == prev_path.len() {
                 break;
             }
         }
