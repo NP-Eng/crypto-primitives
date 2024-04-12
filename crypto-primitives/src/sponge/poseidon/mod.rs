@@ -5,7 +5,7 @@ use crate::sponge::{
 use ark_ff::{BigInteger, PrimeField};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use ark_std::any::TypeId;
-use ark_std::vec;
+#[cfg(not(feature = "std"))]
 use ark_std::vec::Vec;
 
 /// constraints for Poseidon

@@ -1,4 +1,3 @@
-use crate::Vec;
 use ark_ec::CurveGroup;
 use ark_ff::Field;
 use ark_r1cs_std::prelude::*;
@@ -6,7 +5,9 @@ use ark_relations::r1cs::{Namespace, SynthesisError};
 
 use crate::signature::SigRandomizePkGadget;
 
-use core::{borrow::Borrow, marker::PhantomData};
+#[cfg(not(feature = "std"))]
+use ark_std::vec::Vec;
+use ark_std::{borrow::Borrow, marker::PhantomData};
 
 use crate::signature::schnorr::{Parameters, PublicKey, Schnorr};
 use digest::Digest;

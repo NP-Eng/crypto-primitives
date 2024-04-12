@@ -1,5 +1,7 @@
 use crate::Error;
 use ark_std::rand::Rng;
+#[cfg(not(feature = "std"))]
+use ark_std::vec::Vec;
 use ark_std::{fmt::Debug, hash::Hash, marker::PhantomData};
 
 use super::{pedersen, CRHScheme, TwoToOneCRHScheme};
@@ -9,7 +11,6 @@ use ark_ec::{
 };
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use ark_std::borrow::Borrow;
-use ark_std::vec::Vec;
 #[cfg(feature = "r1cs")]
 pub mod constraints;
 

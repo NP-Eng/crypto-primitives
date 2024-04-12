@@ -1,11 +1,11 @@
 use crate::crh::poseidon::{TwoToOneCRH, CRH};
+use crate::crh::CRHScheme;
 use crate::crh::{
     CRHSchemeGadget as CRHGadgetTrait, TwoToOneCRHSchemeGadget as TwoToOneCRHGadgetTrait,
 };
 use crate::sponge::constraints::CryptographicSpongeVar;
 use crate::sponge::poseidon::constraints::PoseidonSpongeVar;
 use crate::sponge::poseidon::PoseidonConfig;
-use crate::{crh::CRHScheme, Vec};
 
 use crate::sponge::Absorb;
 use ark_ff::PrimeField;
@@ -15,6 +15,8 @@ use ark_r1cs_std::R1CSVar;
 use ark_relations::r1cs::{Namespace, SynthesisError};
 use ark_std::borrow::Borrow;
 use ark_std::marker::PhantomData;
+#[cfg(not(feature = "std"))]
+use ark_std::vec::Vec;
 
 #[derive(Clone)]
 pub struct CRHParametersVar<F: PrimeField + Absorb> {

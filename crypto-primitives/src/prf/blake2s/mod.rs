@@ -1,4 +1,5 @@
-use crate::Vec;
+#[cfg(not(feature = "std"))]
+use ark_std::vec::Vec;
 use blake2::{Blake2s256 as B2s, Blake2sMac};
 use digest::Digest;
 

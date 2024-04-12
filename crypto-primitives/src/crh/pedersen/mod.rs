@@ -1,4 +1,4 @@
-use crate::{Error, Vec};
+use crate::Error;
 use ark_std::rand::Rng;
 use ark_std::{
     fmt::{Debug, Formatter, Result as FmtResult},
@@ -13,6 +13,8 @@ use ark_ff::{Field, ToConstraintField};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use ark_std::borrow::Borrow;
 use ark_std::cfg_chunks;
+#[cfg(not(feature = "std"))]
+use ark_std::vec::Vec;
 
 #[cfg(feature = "r1cs")]
 pub mod constraints;

@@ -7,8 +7,8 @@ use ark_ec::{
 use ark_ff::models::{Fp, FpConfig};
 use ark_ff::{BigInteger, Field, PrimeField, ToConstraintField};
 use ark_serialize::CanonicalSerialize;
-use ark_std::string::String;
-use ark_std::vec::Vec;
+#[cfg(not(feature = "std"))]
+use ark_std::{string::String, vec::Vec};
 
 pub use ark_crypto_primitives_macros::*;
 
@@ -232,6 +232,7 @@ impl Absorb for isize {
 
 impl Absorb for String {
     fn to_sponge_bytes(&self, dest: &mut Vec<u8>) {
+        self.len().to_sponge_bytes(dest);
         dest.extend_from_slice(self.as_bytes())
     }
 
@@ -388,7 +389,7 @@ mod tests {
     use crate::sponge::Absorb;
     use crate::sponge::{field_cast, CryptographicSponge};
     use ark_ff::PrimeField;
-    use ark_std::{test_rng, vec::Vec, UniformRand};
+    use ark_std::{test_rng, UniformRand};
 
     #[test]
     fn test_cast() {
@@ -466,5 +467,32 @@ mod tests {
         sponge.absorb(&a.i);
         let out_manual = sponge.squeeze_bytes(32);
         assert_eq!(out_derived, out_manual);
+    }
+
+    #[test]
+    fn test_string_absort() {
+        // absorbing two strings should not be the same as absorbing the concatenated string
+        let s1 = "hello".to_string();
+        let s2 = "world".to_string();
+
+        let mut dest1 = Vec::new();
+        s1.to_sponge_bytes(&mut dest1);
+        s2.to_sponge_bytes(&mut dest1);
+
+        let mut dest2 = Vec::new();
+        let s3 = "helloworld".to_string();
+        s3.to_sponge_bytes(&mut dest2);
+
+        assert_ne!(dest1, dest2);
+
+        // Same for converting to sponge field elements
+        let mut dest1: Vec<Fr> = Vec::new();
+        s1.to_sponge_field_elements(&mut dest1);
+        s2.to_sponge_field_elements(&mut dest1);
+
+        let mut dest2 = Vec::new();
+        s3.to_sponge_field_elements(&mut dest2);
+
+        assert_ne!(dest1, dest2);
     }
 }

@@ -1,4 +1,4 @@
-use crate::{signature::SignatureScheme, Error, Vec};
+use crate::{signature::SignatureScheme, Error};
 use ark_ec::{AffineRepr, CurveGroup};
 use ark_ff::{
     fields::{Field, PrimeField},
@@ -7,6 +7,8 @@ use ark_ff::{
 use ark_serialize::CanonicalSerialize;
 use ark_std::ops::Mul;
 use ark_std::rand::Rng;
+#[cfg(not(feature = "std"))]
+use ark_std::vec::Vec;
 use ark_std::{hash::Hash, marker::PhantomData};
 use digest::Digest;
 

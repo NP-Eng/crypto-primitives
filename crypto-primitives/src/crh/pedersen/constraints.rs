@@ -1,14 +1,13 @@
-use crate::{
-    crh::{
-        pedersen::{Parameters, Window},
-        CRHSchemeGadget as CRHGadgetTrait,
-    },
-    Vec,
+use crate::crh::{
+    pedersen::{Parameters, Window},
+    CRHSchemeGadget as CRHGadgetTrait,
 };
 use ark_ec::CurveGroup;
 use ark_ff::Field;
 use ark_r1cs_std::prelude::*;
 use ark_relations::r1cs::{Namespace, SynthesisError};
+#[cfg(not(feature = "std"))]
+use ark_std::vec::Vec;
 
 use crate::crh::pedersen::{TwoToOneCRH, CRH};
 use crate::crh::{CRHSchemeGadget, TwoToOneCRHSchemeGadget};
