@@ -7,6 +7,7 @@ pub mod injective_map;
 pub mod pedersen;
 pub mod poseidon;
 pub mod sha256;
+pub mod keccak;
 
 use crate::Error;
 
