@@ -14,7 +14,7 @@ use core::borrow::Borrow;
 use sha3::digest::Digest;
 
 impl CRHScheme for Keccak256 {
-    type Input = [u8];
+    type Input = Vec<u8>;
     // This is always 32 bytes. It has to be a Vec to impl CanonicalSerialize
     type Output = Vec<u8>;
     // There are no parameters for SHA256
@@ -35,7 +35,7 @@ impl CRHScheme for Keccak256 {
 }
 
 impl TwoToOneCRHScheme for Keccak256 {
-    type Input = [u8];
+    type Input = Vec<u8>;
     // This is always 32 bytes. It has to be a Vec to impl CanonicalSerialize
     type Output = Vec<u8>;
     // There are no parameters for SHA256
@@ -68,10 +68,6 @@ impl TwoToOneCRHScheme for Keccak256 {
         left_input: T,
         right_input: T,
     ) -> Result<Self::Output, Error> {
-        <Self as TwoToOneCRHScheme>::evaluate(
-            parameters,
-            left_input.borrow().as_slice(),
-            right_input.borrow().as_slice(),
-        )
+        <Self as TwoToOneCRHScheme>::evaluate(parameters, left_input, right_input)
     }
 }
